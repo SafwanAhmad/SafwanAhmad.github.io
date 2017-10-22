@@ -11726,9 +11726,7 @@ body {
 div#notebook {
   overflow: visible;
   border-top: none;
-}
-
-@media print {
+}@media print {
   div.cell {
     display: block;
     page-break-inside: avoid;
@@ -11749,7 +11747,7 @@ div#notebook {
 
 <!-- Loading mathjax macro -->
 <!-- Load mathjax -->
-    <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_HTML"></script>
     <!-- MathJax configuration -->
     <script type="text/x-mathjax-config">
     MathJax.Hub.Config({
@@ -11773,9 +11771,41 @@ div#notebook {
   <div tabindex="-1" id="notebook" class="border-box-sizing">
     <div class="container" id="notebook-container">
 
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Hundred-Shades-of-Linear-Regression"><span style="color:#691126">Hundred Shades of Linear Regression</span><a class="anchor-link" href="#Hundred-Shades-of-Linear-Regression">&#182;</a></h1>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Yet-Another-Post-on-Regression?">Yet Another Post on Regression?<a class="anchor-link" href="#Yet-Another-Post-on-Regression?">&#182;</a></h3><p><strong>Short answer</strong>: No.<br>
+<strong>Long answer</strong>: An year or so ago I took <a href="https://www.coursera.org/instructor/andrewng">Andrew Ng's</a> brilliant <a href="https://www.coursera.org/learn/machine-learning">Machine Learning</a> course. I learned about regression, classification, neural networks, support vector machines, principal components and collaborative filtering.  I gained quite a bit of understanding of core topics of ML by painstakingly working through every assignment. The course gave me a kickstart in the domain but I decided to deep dive further. So I enrolled in an intermediate <a href="https://classroom.udacity.com/nanodegrees/nd101/syllabus/core-curriculum">Deep Learning program</a> offered by Udacity and completed it recently. The course was packed with more advanced ML algorithms and correspondingly complex models. So just like many ML engineers now I carry a portfolio consisting of neural, convolutional, recurrent and generative adversarial networks.</p>
+<p>Some time has passed and I haven't used some of the techniques outside the class. So now I want to test my understanding of the guts of these algorithms. In the case of ML one of the most interesting algorithm is linear regression, which is kind of a starting point for more esoteric algorithms.</p>
+<p>I'm rolling out this <a href="https://safwanahmad.github.io/">blog</a> that is my take on machine learning. This first post titled <a href="">Hundred shades of Linear Regression</a> will look at this simple algorithm from many differennt perspectives. Hope it will help you and me understand the nuts &amp; bolts of linear regression.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="What-is-linear-regression?">What is linear regression?<a class="anchor-link" href="#What-is-linear-regression?">&#182;</a></h3><p>Linear regression got its name for <a href="https://stats.stackexchange.com/a/11089/164767">historical reasons</a>. In simple language it means line fitting. But a line is a two dimensional thing, in practice linear regression covers multidimensional data too, when we actually fit a plane not a line to some data.</p>
+<p>But why do we need line fitting? Because once we fit a line to a data we can predict outputs for unknown inputs too. In the rest of the post I will show you why linear regression counts as machine learning, when it is OK to use linear regression and how it actually works.</p>
+<p>Most typical introductions to linear regression use matrix algebra. In this post, however, I will use simple algebra and calculus to derive all equations. Interestingly, Python has a very powerful symbolic math library called <a href="http://www.sympy.org/en/index.html">SymPy</a> that will let us do all calculation like we do them with pen and paper.</p>
+<p>The data we will use here comes from CMU's <a href="http://lib.stat.cmu.edu/datasets/bodyfat">Body Fat dataset</a>.</p>
+
+</div>
+</div>
+</div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[2]:</div>
+<div class="prompt input_prompt">In&nbsp;[1]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pn</span>
@@ -11787,10 +11817,29 @@ div#notebook {
 </div>
 </div>
 
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>/home/safwanx/.conda/envs/python3/lib/python3.6/site-packages/matplotlib/font_manager.py:280: UserWarning: Matplotlib is building the font cache using fc-list. This may take a moment.
+  &#39;Matplotlib is building the font cache using fc-list. &#39;
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[3]:</div>
+<div class="prompt input_prompt">In&nbsp;[2]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Read data and print some rows</span>
@@ -11807,11 +11856,26 @@ div#notebook {
 
 
 <div class="output_area">
-<div class="prompt output_prompt">Out[3]:</div>
+
+<div class="prompt output_prompt">Out[2]:</div>
+
 
 
 <div class="output_html rendered_html output_subarea output_execute_result">
 <div>
+<style>
+    .dataframe thead tr:only-child th {
+        text-align: right;
+    }
+
+    .dataframe thead th {
+        text-align: left;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -11937,7 +12001,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[4]:</div>
+<div class="prompt input_prompt">In&nbsp;[3]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">requiredData</span> <span class="o">=</span> <span class="n">dataframe</span><span class="p">[[</span><span class="s1">&#39;Weight (lbs)&#39;</span><span class="p">,</span><span class="s1">&#39;Abdomen 2 circumference (cm)&#39;</span><span class="p">]]</span>
@@ -11954,18 +12018,22 @@ div#notebook {
 
 
 <div class="output_area">
-<div class="prompt output_prompt">Out[4]:</div>
+
+<div class="prompt output_prompt">Out[3]:</div>
+
 
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>[&lt;matplotlib.lines.Line2D at 0x7f40389fc5c0&gt;]</pre>
+<pre>[&lt;matplotlib.lines.Line2D at 0x7fbf0dc03550&gt;]</pre>
 </div>
 
 </div>
 
 <div class="output_area">
+
 <div class="prompt"></div>
+
 
 
 
@@ -12120,7 +12188,7 @@ JXoRkZb7/0xQ8klko6csAAAAAElFTkSuQmCC
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[5]:</div>
+<div class="prompt input_prompt">In&nbsp;[4]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Split data between train and test set</span>
@@ -12144,7 +12212,9 @@ JXoRkZb7/0xQ8klko6csAAAAAElFTkSuQmCC
 
 
 <div class="output_area">
+
 <div class="prompt"></div>
+
 
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>(151, 2)
@@ -12154,7 +12224,9 @@ JXoRkZb7/0xQ8klko6csAAAAAElFTkSuQmCC
 </div>
 
 <div class="output_area">
+
 <div class="prompt"></div>
+
 
 
 
@@ -12328,7 +12400,7 @@ yf1/B5hmaditH6cAAAAASUVORK5CYII=
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[6]:</div>
+<div class="prompt input_prompt">In&nbsp;[5]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">sympy</span> <span class="k">as</span> <span class="nn">sp</span>
@@ -12352,7 +12424,7 @@ yf1/B5hmaditH6cAAAAASUVORK5CYII=
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[7]:</div>
+<div class="prompt input_prompt">In&nbsp;[6]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Find out the total cost for input data (train)</span>
@@ -12375,7 +12447,9 @@ yf1/B5hmaditH6cAAAAASUVORK5CYII=
 
 
 <div class="output_area">
+
 <div class="prompt"></div>
+
 
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>                    2                       2                        2        
@@ -12531,7 +12605,7 @@ c + 104.8⋅m - 216.0)  + (c + 105.0⋅m - 183.25)  + (c + 105.3⋅m - 202.5)  +
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[8]:</div>
+<div class="prompt input_prompt">In&nbsp;[7]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Simplify the total cost</span>
@@ -12548,7 +12622,9 @@ c + 104.8⋅m - 216.0)  + (c + 105.0⋅m - 183.25)  + (c + 105.3⋅m - 202.5)  +
 
 
 <div class="output_area">
+
 <div class="prompt"></div>
+
 
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>       2                                         2                            
@@ -12566,7 +12642,7 @@ c + 104.8⋅m - 216.0)  + (c + 105.0⋅m - 183.25)  + (c + 105.3⋅m - 202.5)  +
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[9]:</div>
+<div class="prompt input_prompt">In&nbsp;[8]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Find differentiation w.r.t m and c</span>
@@ -12589,7 +12665,9 @@ c + 104.8⋅m - 216.0)  + (c + 105.0⋅m - 183.25)  + (c + 105.3⋅m - 202.5)  +
 
 
 <div class="output_area">
+
 <div class="prompt"></div>
+
 
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>27663.6⋅c + 2566772.76⋅m - 4982416.37
@@ -12605,7 +12683,7 @@ c + 104.8⋅m - 216.0)  + (c + 105.0⋅m - 183.25)  + (c + 105.3⋅m - 202.5)  +
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[10]:</div>
+<div class="prompt input_prompt">In&nbsp;[9]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Plot the line corresponding to best solution</span>
@@ -12626,18 +12704,22 @@ c + 104.8⋅m - 216.0)  + (c + 105.0⋅m - 183.25)  + (c + 105.3⋅m - 202.5)  +
 
 
 <div class="output_area">
-<div class="prompt output_prompt">Out[10]:</div>
+
+<div class="prompt output_prompt">Out[9]:</div>
+
 
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>[&lt;matplotlib.lines.Line2D at 0x7f3ffdf81e10&gt;]</pre>
+<pre>[&lt;matplotlib.lines.Line2D at 0x7fbee069b2b0&gt;]</pre>
 </div>
 
 </div>
 
 <div class="output_area">
+
 <div class="prompt"></div>
+
 
 
 
@@ -12846,7 +12928,7 @@ gg==
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[13]:</div>
+<div class="prompt input_prompt">In&nbsp;[10]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">bokeh.plotting</span> <span class="k">import</span> <span class="n">figure</span><span class="p">,</span> <span class="n">output_notebook</span><span class="p">,</span> <span class="n">show</span>
@@ -12854,7 +12936,7 @@ gg==
 <span class="n">output_notebook</span><span class="p">()</span>
 
 <span class="n">fig</span> <span class="o">=</span> <span class="n">figure</span><span class="p">(</span><span class="n">plot_width</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span> <span class="n">plot_height</span><span class="o">=</span><span class="mi">400</span><span class="p">)</span>
-<span class="n">fig</span><span class="o">.</span><span class="n">circle</span><span class="p">(</span><span class="n">train</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span> <span class="n">train</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;green&quot;</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">triangle</span><span class="p">(</span><span class="n">train</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span> <span class="n">train</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;green&quot;</span><span class="p">)</span>
 <span class="n">show</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
 </pre></div>
 
@@ -12867,47 +12949,51 @@ gg==
 
 
 <div class="output_area">
+
 <div class="prompt"></div>
+
 
 
 <div class="output_html rendered_html output_subarea ">
 
     <div class="bk-root">
-        <a href="http://bokeh.pydata.org" target="_blank" class="bk-logo bk-logo-small bk-logo-notebook"></a>
-        <span id="bcd11c26-c390-438d-8f55-ba1517b4e0fb">Loading BokehJS ...</span>
+        <a href="https://bokeh.pydata.org" target="_blank" class="bk-logo bk-logo-small bk-logo-notebook"></a>
+        <span id="30c97fbf-d335-499c-b083-08f283e53932">Loading BokehJS ...</span>
     </div>
 </div>
 
 </div>
 
 <div class="output_area">
+
 <div class="prompt"></div>
 
 
 
 
-<div id="710a370b-d45f-428d-b483-7486830de00f"></div>
+
+<div id="35351cb5-ae74-487a-9a8c-84939fe69343"></div>
 <div class="output_subarea output_javascript ">
 <script type="text/javascript">
-var element = $('#710a370b-d45f-428d-b483-7486830de00f');
+var element = $('#35351cb5-ae74-487a-9a8c-84939fe69343');
 
-(function(global) {
+(function(root) {
   function now() {
     return new Date();
   }
 
   var force = true;
 
-  if (typeof (window._bokeh_onload_callbacks) === "undefined" || force === true) {
-    window._bokeh_onload_callbacks = [];
-    window._bokeh_is_loading = undefined;
+  if (typeof (root._bokeh_onload_callbacks) === "undefined" || force === true) {
+    root._bokeh_onload_callbacks = [];
+    root._bokeh_is_loading = undefined;
   }
 
 
   
-  if (typeof (window._bokeh_timeout) === "undefined" || force === true) {
-    window._bokeh_timeout = Date.now() + 5000;
-    window._bokeh_failed_load = false;
+  if (typeof (root._bokeh_timeout) === "undefined" || force === true) {
+    root._bokeh_timeout = Date.now() + 5000;
+    root._bokeh_failed_load = false;
   }
 
   var NB_LOAD_WARNING = {'data': {'text/html':
@@ -12927,22 +13013,30 @@ var element = $('#710a370b-d45f-428d-b483-7486830de00f');
      "</div>"}};
 
   function display_loaded() {
-    if (window.Bokeh !== undefined) {
-      document.getElementById("bcd11c26-c390-438d-8f55-ba1517b4e0fb").textContent = "BokehJS successfully loaded.";
-    } else if (Date.now() < window._bokeh_timeout) {
+    if (root.Bokeh !== undefined) {
+      var el = document.getElementById("30c97fbf-d335-499c-b083-08f283e53932");
+      if (el != null) {
+        el.textContent = "BokehJS " + Bokeh.version + " successfully loaded.";
+      }
+    } else if (Date.now() < root._bokeh_timeout) {
       setTimeout(display_loaded, 100)
     }
   }
 
+
   function run_callbacks() {
-    window._bokeh_onload_callbacks.forEach(function(callback) { callback() });
-    delete window._bokeh_onload_callbacks
+    try {
+      root._bokeh_onload_callbacks.forEach(function(callback) { callback() });
+    }
+    finally {
+      delete root._bokeh_onload_callbacks
+    }
     console.info("Bokeh: all callbacks have finished");
   }
 
   function load_libs(js_urls, callback) {
-    window._bokeh_onload_callbacks.push(callback);
-    if (window._bokeh_is_loading > 0) {
+    root._bokeh_onload_callbacks.push(callback);
+    if (root._bokeh_is_loading > 0) {
       console.log("Bokeh: BokehJS is being loaded, scheduling callback at", now());
       return null;
     }
@@ -12951,15 +13045,15 @@ var element = $('#710a370b-d45f-428d-b483-7486830de00f');
       return null;
     }
     console.log("Bokeh: BokehJS not loaded, scheduling load and callback at", now());
-    window._bokeh_is_loading = js_urls.length;
+    root._bokeh_is_loading = js_urls.length;
     for (var i = 0; i < js_urls.length; i++) {
       var url = js_urls[i];
       var s = document.createElement('script');
       s.src = url;
       s.async = false;
       s.onreadystatechange = s.onload = function() {
-        window._bokeh_is_loading--;
-        if (window._bokeh_is_loading === 0) {
+        root._bokeh_is_loading--;
+        if (root._bokeh_is_loading === 0) {
           console.log("Bokeh: all BokehJS libraries loaded");
           run_callbacks()
         }
@@ -12970,13 +13064,13 @@ var element = $('#710a370b-d45f-428d-b483-7486830de00f');
       console.log("Bokeh: injecting script tag for BokehJS library: ", url);
       document.getElementsByTagName("head")[0].appendChild(s);
     }
-  };var element = document.getElementById("bcd11c26-c390-438d-8f55-ba1517b4e0fb");
+  };var element = document.getElementById("30c97fbf-d335-499c-b083-08f283e53932");
   if (element == null) {
-    console.log("Bokeh: ERROR: autoload.js configured with elementid 'bcd11c26-c390-438d-8f55-ba1517b4e0fb' but no matching script tag was found. ")
+    console.log("Bokeh: ERROR: autoload.js configured with elementid '30c97fbf-d335-499c-b083-08f283e53932' but no matching script tag was found. ")
     return false;
   }
 
-  var js_urls = ["https://cdn.pydata.org/bokeh/release/bokeh-0.12.4.min.js", "https://cdn.pydata.org/bokeh/release/bokeh-widgets-0.12.4.min.js"];
+  var js_urls = ["https://cdn.pydata.org/bokeh/release/bokeh-0.12.7.min.js", "https://cdn.pydata.org/bokeh/release/bokeh-widgets-0.12.7.min.js", "https://cdn.pydata.org/bokeh/release/bokeh-tables-0.12.7.min.js", "https://cdn.pydata.org/bokeh/release/bokeh-gl-0.12.7.min.js"];
 
   var inline_js = [
     function(Bokeh) {
@@ -12985,36 +13079,42 @@ var element = $('#710a370b-d45f-428d-b483-7486830de00f');
     
     function(Bokeh) {
       
-      document.getElementById("bcd11c26-c390-438d-8f55-ba1517b4e0fb").textContent = "BokehJS is loading...";
+    },
+    
+    function(Bokeh) {
+      
+      document.getElementById("30c97fbf-d335-499c-b083-08f283e53932").textContent = "BokehJS is loading...";
     },
     function(Bokeh) {
-      console.log("Bokeh: injecting CSS: https://cdn.pydata.org/bokeh/release/bokeh-0.12.4.min.css");
-      Bokeh.embed.inject_css("https://cdn.pydata.org/bokeh/release/bokeh-0.12.4.min.css");
-      console.log("Bokeh: injecting CSS: https://cdn.pydata.org/bokeh/release/bokeh-widgets-0.12.4.min.css");
-      Bokeh.embed.inject_css("https://cdn.pydata.org/bokeh/release/bokeh-widgets-0.12.4.min.css");
+      console.log("Bokeh: injecting CSS: https://cdn.pydata.org/bokeh/release/bokeh-0.12.7.min.css");
+      Bokeh.embed.inject_css("https://cdn.pydata.org/bokeh/release/bokeh-0.12.7.min.css");
+      console.log("Bokeh: injecting CSS: https://cdn.pydata.org/bokeh/release/bokeh-widgets-0.12.7.min.css");
+      Bokeh.embed.inject_css("https://cdn.pydata.org/bokeh/release/bokeh-widgets-0.12.7.min.css");
+      console.log("Bokeh: injecting CSS: https://cdn.pydata.org/bokeh/release/bokeh-tables-0.12.7.min.css");
+      Bokeh.embed.inject_css("https://cdn.pydata.org/bokeh/release/bokeh-tables-0.12.7.min.css");
     }
   ];
 
   function run_inline_js() {
     
-    if ((window.Bokeh !== undefined) || (force === true)) {
+    if ((root.Bokeh !== undefined) || (force === true)) {
       for (var i = 0; i < inline_js.length; i++) {
-        inline_js[i](window.Bokeh);
+        inline_js[i].call(root, root.Bokeh);
       }if (force === true) {
         display_loaded();
-      }} else if (Date.now() < window._bokeh_timeout) {
+      }} else if (Date.now() < root._bokeh_timeout) {
       setTimeout(run_inline_js, 100);
-    } else if (!window._bokeh_failed_load) {
+    } else if (!root._bokeh_failed_load) {
       console.log("Bokeh: BokehJS failed to load within specified timeout.");
-      window._bokeh_failed_load = true;
+      root._bokeh_failed_load = true;
     } else if (force !== true) {
-      var cell = $(document.getElementById("bcd11c26-c390-438d-8f55-ba1517b4e0fb")).parents('.cell').data().cell;
+      var cell = $(document.getElementById("30c97fbf-d335-499c-b083-08f283e53932")).parents('.cell').data().cell;
       cell.output_area.append_execute_result(NB_LOAD_WARNING)
     }
 
   }
 
-  if (window._bokeh_is_loading === 0) {
+  if (root._bokeh_is_loading === 0) {
     console.log("Bokeh: BokehJS loaded, going straight to plotting");
     run_inline_js();
   } else {
@@ -13023,41 +13123,43 @@ var element = $('#710a370b-d45f-428d-b483-7486830de00f');
       run_inline_js();
     });
   }
-}(this));
+}(window));
 </script>
 </div>
 
 </div>
 
 <div class="output_area">
+
 <div class="prompt"></div>
+
 
 
 <div class="output_html rendered_html output_subarea ">
 
 
     <div class="bk-root">
-        <div class="bk-plotdiv" id="484cfade-0589-496a-a00a-42f76ccf2176"></div>
+        <div class="bk-plotdiv" id="685d72e4-697d-4d03-8cf2-ed8bc572d31e"></div>
     </div>
 <script type="text/javascript">
   
-  (function(global) {
+  (function(root) {
     function now() {
       return new Date();
     }
   
     var force = false;
   
-    if (typeof (window._bokeh_onload_callbacks) === "undefined" || force === true) {
-      window._bokeh_onload_callbacks = [];
-      window._bokeh_is_loading = undefined;
+    if (typeof (root._bokeh_onload_callbacks) === "undefined" || force === true) {
+      root._bokeh_onload_callbacks = [];
+      root._bokeh_is_loading = undefined;
     }
   
   
     
-    if (typeof (window._bokeh_timeout) === "undefined" || force === true) {
-      window._bokeh_timeout = Date.now() + 0;
-      window._bokeh_failed_load = false;
+    if (typeof (root._bokeh_timeout) === "undefined" || force === true) {
+      root._bokeh_timeout = Date.now() + 0;
+      root._bokeh_failed_load = false;
     }
   
     var NB_LOAD_WARNING = {'data': {'text/html':
@@ -13077,22 +13179,30 @@ var element = $('#710a370b-d45f-428d-b483-7486830de00f');
        "</div>"}};
   
     function display_loaded() {
-      if (window.Bokeh !== undefined) {
-        document.getElementById("484cfade-0589-496a-a00a-42f76ccf2176").textContent = "BokehJS successfully loaded.";
-      } else if (Date.now() < window._bokeh_timeout) {
+      if (root.Bokeh !== undefined) {
+        var el = document.getElementById("685d72e4-697d-4d03-8cf2-ed8bc572d31e");
+        if (el != null) {
+          el.textContent = "BokehJS " + Bokeh.version + " successfully loaded.";
+        }
+      } else if (Date.now() < root._bokeh_timeout) {
         setTimeout(display_loaded, 100)
       }
     }
   
+  
     function run_callbacks() {
-      window._bokeh_onload_callbacks.forEach(function(callback) { callback() });
-      delete window._bokeh_onload_callbacks
+      try {
+        root._bokeh_onload_callbacks.forEach(function(callback) { callback() });
+      }
+      finally {
+        delete root._bokeh_onload_callbacks
+      }
       console.info("Bokeh: all callbacks have finished");
     }
   
     function load_libs(js_urls, callback) {
-      window._bokeh_onload_callbacks.push(callback);
-      if (window._bokeh_is_loading > 0) {
+      root._bokeh_onload_callbacks.push(callback);
+      if (root._bokeh_is_loading > 0) {
         console.log("Bokeh: BokehJS is being loaded, scheduling callback at", now());
         return null;
       }
@@ -13101,15 +13211,15 @@ var element = $('#710a370b-d45f-428d-b483-7486830de00f');
         return null;
       }
       console.log("Bokeh: BokehJS not loaded, scheduling load and callback at", now());
-      window._bokeh_is_loading = js_urls.length;
+      root._bokeh_is_loading = js_urls.length;
       for (var i = 0; i < js_urls.length; i++) {
         var url = js_urls[i];
         var s = document.createElement('script');
         s.src = url;
         s.async = false;
         s.onreadystatechange = s.onload = function() {
-          window._bokeh_is_loading--;
-          if (window._bokeh_is_loading === 0) {
+          root._bokeh_is_loading--;
+          if (root._bokeh_is_loading === 0) {
             console.log("Bokeh: all BokehJS libraries loaded");
             run_callbacks()
           }
@@ -13120,9 +13230,9 @@ var element = $('#710a370b-d45f-428d-b483-7486830de00f');
         console.log("Bokeh: injecting script tag for BokehJS library: ", url);
         document.getElementsByTagName("head")[0].appendChild(s);
       }
-    };var element = document.getElementById("484cfade-0589-496a-a00a-42f76ccf2176");
+    };var element = document.getElementById("685d72e4-697d-4d03-8cf2-ed8bc572d31e");
     if (element == null) {
-      console.log("Bokeh: ERROR: autoload.js configured with elementid '484cfade-0589-496a-a00a-42f76ccf2176' but no matching script tag was found. ")
+      console.log("Bokeh: ERROR: autoload.js configured with elementid '685d72e4-697d-4d03-8cf2-ed8bc572d31e' but no matching script tag was found. ")
       return false;
     }
   
@@ -13132,8 +13242,8 @@ var element = $('#710a370b-d45f-428d-b483-7486830de00f');
       function(Bokeh) {
         (function() {
           var fn = function() {
-            var docs_json = {"d28b3a45-026f-4d12-b30b-2f5f55dc0246":{"roots":{"references":[{"attributes":{"formatter":{"id":"34543ff4-35d0-4bc7-a2af-13566e100bb7","type":"BasicTickFormatter"},"plot":{"id":"6bf6860d-53e5-48d1-8bb2-29932edf05e4","subtype":"Figure","type":"Plot"},"ticker":{"id":"ced97ee9-3373-4579-a355-223b39034791","type":"BasicTicker"}},"id":"9fcded79-6801-4e7a-9376-cf457bf8c153","type":"LinearAxis"},{"attributes":{},"id":"d17030bf-2fac-413f-9b69-3c4fb8d2bee2","type":"BasicTicker"},{"attributes":{},"id":"34543ff4-35d0-4bc7-a2af-13566e100bb7","type":"BasicTickFormatter"},{"attributes":{"plot":{"id":"6bf6860d-53e5-48d1-8bb2-29932edf05e4","subtype":"Figure","type":"Plot"}},"id":"40d9bcd4-cc42-4115-9200-0222413be56f","type":"SaveTool"},{"attributes":{"dimension":1,"plot":{"id":"6bf6860d-53e5-48d1-8bb2-29932edf05e4","subtype":"Figure","type":"Plot"},"ticker":{"id":"ced97ee9-3373-4579-a355-223b39034791","type":"BasicTicker"}},"id":"16213348-ffdf-47ae-9b74-939c5ed35fed","type":"Grid"},{"attributes":{"formatter":{"id":"1e12cd72-7d7a-408b-a22e-6adfb1841f3d","type":"BasicTickFormatter"},"plot":{"id":"6bf6860d-53e5-48d1-8bb2-29932edf05e4","subtype":"Figure","type":"Plot"},"ticker":{"id":"d17030bf-2fac-413f-9b69-3c4fb8d2bee2","type":"BasicTicker"}},"id":"7ba4dd9c-455b-4f2e-b34d-4dc2eacd51a8","type":"LinearAxis"},{"attributes":{},"id":"1e12cd72-7d7a-408b-a22e-6adfb1841f3d","type":"BasicTickFormatter"},{"attributes":{"bottom_units":"screen","fill_alpha":{"value":0.5},"fill_color":{"value":"lightgrey"},"left_units":"screen","level":"overlay","line_alpha":{"value":1.0},"line_color":{"value":"black"},"line_dash":[4,4],"line_width":{"value":2},"plot":null,"render_mode":"css","right_units":"screen","top_units":"screen"},"id":"81864e1f-faf6-42a8-824e-a8740d6b6f57","type":"BoxAnnotation"},{"attributes":{"plot":{"id":"6bf6860d-53e5-48d1-8bb2-29932edf05e4","subtype":"Figure","type":"Plot"},"ticker":{"id":"d17030bf-2fac-413f-9b69-3c4fb8d2bee2","type":"BasicTicker"}},"id":"a36a80e3-d0c0-486f-b707-4aed2a085e5e","type":"Grid"},{"attributes":{"callback":null},"id":"9536ea80-6343-452c-a95d-e5d41474f079","type":"DataRange1d"},{"attributes":{},"id":"ced97ee9-3373-4579-a355-223b39034791","type":"BasicTicker"},{"attributes":{"fill_alpha":{"value":0.1},"fill_color":{"value":"#1f77b4"},"line_alpha":{"value":0.1},"line_color":{"value":"#1f77b4"},"x":{"field":"x"},"y":{"field":"y"}},"id":"9883b425-2cce-458d-ab1f-c43c68050125","type":"Circle"},{"attributes":{"callback":null},"id":"a0f33c61-9491-4fc4-a691-d8c88538b09c","type":"DataRange1d"},{"attributes":{"fill_color":{"value":"green"},"line_color":{"value":"green"},"x":{"field":"x"},"y":{"field":"y"}},"id":"5c29fa06-872d-4fe3-8770-2503bb0144c0","type":"Circle"},{"attributes":{"plot":{"id":"6bf6860d-53e5-48d1-8bb2-29932edf05e4","subtype":"Figure","type":"Plot"}},"id":"e8e600af-582e-4dad-8581-2fd55c13af3f","type":"PanTool"},{"attributes":{"plot":null,"text":""},"id":"0ff52f3f-856f-43b9-bbf3-db6e18b3ef3d","type":"Title"},{"attributes":{"plot":{"id":"6bf6860d-53e5-48d1-8bb2-29932edf05e4","subtype":"Figure","type":"Plot"}},"id":"ae7b2e3d-95bb-4cae-8e9a-e4ae7486106c","type":"ResetTool"},{"attributes":{"active_drag":"auto","active_scroll":"auto","active_tap":"auto","tools":[{"id":"e8e600af-582e-4dad-8581-2fd55c13af3f","type":"PanTool"},{"id":"89b2680b-2639-4ff4-bc74-386d8a21ff51","type":"WheelZoomTool"},{"id":"9fced2c1-3473-4351-b821-5397c7e0edb7","type":"BoxZoomTool"},{"id":"40d9bcd4-cc42-4115-9200-0222413be56f","type":"SaveTool"},{"id":"ae7b2e3d-95bb-4cae-8e9a-e4ae7486106c","type":"ResetTool"},{"id":"0cecb229-f938-4793-a5fc-4526033f7c29","type":"HelpTool"}]},"id":"723c8a4e-4f70-4e0d-9588-f9b8306db669","type":"Toolbar"},{"attributes":{"callback":null,"column_names":["x","y"],"data":{"x":{"__ndarray__":"zczMzMxMVUAAAAAAAMBUQJqZmZmZ+VVAmpmZmZmZVUAAAAAAAABZQJqZmZmZmVdAzczMzMysVkAAAAAAACBWQAAAAAAAoFRAZmZmZmYmVkBmZmZmZuZUQJqZmZmZuVZAZmZmZmbmVkAzMzMzM3NZQJqZmZmZGVhAMzMzMzMzV0CamZmZmRlYQAAAAAAAYFhAZmZmZmZmVkAAAAAAACBZQJqZmZmZ+VdAMzMzMzOzWECamZmZmRlTQAAAAAAAAFRAMzMzMzMTU0DNzMzMzOxTQGZmZmZmplJAzczMzMwsVkCamZmZmXlSQAAAAAAA4FRAzczMzMwsVkAAAAAAACBVQGZmZmZmxlNAAAAAAAAgWUBmZmZmZuZcQGZmZmZmRlxAmpmZmZk5WUAzMzMzM7NYQDMzMzMzg2JAZmZmZmYGW0DNzMzMzIxfQDMzMzMzE1pAzczMzMzMW0AzMzMzMxNaQAAAAAAAAFNAAAAAAABgVEDNzMzMzGxSQAAAAAAA4FNAmpmZmZnZVECamZmZmZlRQM3MzMzMrFVAmpmZmZl5U0AAAAAAAIBUQGZmZmZm5lNAZmZmZmZmU0AAAAAAAABZQDMzMzMz81hAzczMzMwMWkAzMzMzM1NaQDMzMzMzk1hAMzMzMzMzWkDNzMzMzKxXQJqZmZmZmVlAzczMzMzsWEAAAAAAAGBaQDMzMzMzE1lAmpmZmZn5VEBmZmZmZqZVQJqZmZmZmVNAZmZmZmYmVUAAAAAAAOBWQDMzMzMzs1RAmpmZmZm5VEAAAAAAAABTQDMzMzMz01RAMzMzMzNzVEAzMzMzM7NTQAAAAAAAwFdAmpmZmZnZV0BmZmZmZqZYQDMzMzMz81dAAAAAAABAVkAzMzMzM3NYQJqZmZmZuVdAMzMzMzPzWEDNzMzMzGxWQGZmZmZmBlZAmpmZmZm5VkAAAAAAAIBVQAAAAAAAoFVAZmZmZmbmV0DNzMzMzExXQGZmZmZmxlRAAAAAAABgWEAzMzMzMzNWQM3MzMzMzFhAZmZmZmbmVkDNzMzMzKxVQM3MzMzMDFZAAAAAAACAV0AAAAAAAMBXQAAAAAAAAFdAzczMzMxMVkAAAAAAAOBXQGZmZmZmplhAMzMzMzPTVUAzMzMzM7NZQGZmZmZmZllAzczMzMwsVkAzMzMzMxNXQGZmZmZmplZAAAAAAABAWkAAAAAAAMBXQGZmZmZmZlZAmpmZmZkZV0BmZmZmZqZVQAAAAAAAgFZAAAAAAACAVkCamZmZmRlXQAAAAAAA4FVAzczMzMzMWEBmZmZmZoZYQDMzMzMz01RAZmZmZmaGVUBmZmZmZgZVQJqZmZmZeVZAZmZmZmYGV0AAAAAAAIBTQAAAAAAAYFdAAAAAAADAVUBmZmZmZoZWQDMzMzMzk1ZAMzMzMzPzWECamZmZmVlWQM3MzMzMzFVAZmZmZmZGWUBmZmZmZoZVQGZmZmZmplhAAAAAAAAgVkBmZmZmZqZaQGZmZmZmRldAAAAAAABAV0AAAAAAAMBWQGZmZmZmRlNAMzMzMzNTVUCamZmZmXlUQGZmZmZmxlhAAAAAAAAgWUAAAAAAACBTQDMzMzMzs1pAZmZmZmZmU0A=","dtype":"float64","shape":[151]},"y":{"__ndarray__":"AAAAAABIY0AAAAAAAKhlQAAAAAAAQGNAAAAAAAAYZ0AAAAAAAAhnQAAAAAAASGpAAAAAAACgZkAAAAAAAABmQAAAAAAA4GdAAAAAAADIaEAAAAAAAEhnQAAAAAAAAGtAAAAAAACQZkAAAAAAAKhpQAAAAAAAeGdAAAAAAABYZEAAAAAAAHhoQAAAAAAAKGpAAAAAAAD4ZkAAAAAAAHhqQAAAAAAAYGZAAAAAAAAQaUAAAAAAAIhhQAAAAAAAmGJAAAAAAADoYkAAAAAAAOhjQAAAAAAAcGBAAAAAAACAYkAAAAAAAKhgQAAAAAAAGGRAAAAAAADAZkAAAAAAAAhkQAAAAAAAAGVAAAAAAABQa0AAAAAAAOhuQAAAAAAA+GdAAAAAAABIaUAAAAAAAJhoQGZmZmZmsnZAAAAAAABgaUAAAAAAAGxwQAAAAAAAoGlAAAAAAAAga0AAAAAAAIBqQAAAAAAAUF9AAAAAAACIZEAAAAAAALBgQAAAAAAAkGJAAAAAAAD4YEAAAAAAAOBfQAAAAAAAyGNAAAAAAABoYUAAAAAAAChhQAAAAAAAGGNAAAAAAAAIYUAAAAAAAMBoQAAAAAAAsGZAAAAAAAAoaUAAAAAAAFBpQAAAAAAAeGZAAAAAAAAAa0AAAAAAAFhmQAAAAAAAKGhAAAAAAABAZkAAAAAAALBpQAAAAAAA8GZAAAAAAADwYkAAAAAAAFhjQAAAAAAAaGNAAAAAAACYY0AAAAAAAPBkQAAAAAAAWGJAAAAAAAAYZEAAAAAAAEBfQAAAAAAA4GFAAAAAAACIYkAAAAAAAFBkQAAAAAAAOGZAAAAAAAAoZEAAAAAAAGhlQAAAAAAAeGRAAAAAAADIYkAAAAAAAMhnQAAAAAAAWGVAAAAAAAAAZUAAAAAAAOBkQAAAAAAAuGNAAAAAAAAAZEAAAAAAABhmQAAAAAAAAGZAAAAAAAAgZkAAAAAAAHhmQAAAAAAAqGRAAAAAAAAQaEAAAAAAAAhnQAAAAAAAEGxAAAAAAACYZ0AAAAAAAFBkQAAAAAAAkGNAAAAAAACgaEAAAAAAANBoQAAAAAAAuGVAAAAAAACYZUAAAAAAAJhoQAAAAAAAIGZAAAAAAACwZEAAAAAAAAhpQAAAAAAAaGlAAAAAAABAaEAAAAAAABBlQAAAAAAAWGVAAAAAAADoZkAAAAAAAEhmQAAAAAAAYGRAAAAAAADoZUAAAAAAAMBjQAAAAAAAKGZAAAAAAABgZkAAAAAAAOBnQAAAAAAAcGdAAAAAAADQaUAAAAAAAChnQAAAAAAACGRAAAAAAADwYkAAAAAAACBkQAAAAAAA4GRAAAAAAAAwZkAAAAAAAAhjQAAAAAAACGhAAAAAAACoZEAAAAAAAHhlQAAAAAAAaGVAAAAAAACgaEAAAAAAAKBjQAAAAAAACGVAAAAAAABAZ0AAAAAAANhkQAAAAAAAeGdAAAAAAAAIZUAAAAAAAJhqQAAAAAAAGGZAAAAAAACoZUAAAAAAAOBkQAAAAAAA+GNAzczMzMyEZ0AAAAAAAIBjQAAAAAAAEGpAAAAAAADQaUAAAAAAAPhhQAAAAAAA4GtAAAAAAAAIY0A=","dtype":"float64","shape":[151]}}},"id":"c22ad6b0-0595-40df-b018-0b423c3f2b08","type":"ColumnDataSource"},{"attributes":{"plot":{"id":"6bf6860d-53e5-48d1-8bb2-29932edf05e4","subtype":"Figure","type":"Plot"}},"id":"0cecb229-f938-4793-a5fc-4526033f7c29","type":"HelpTool"},{"attributes":{},"id":"0cf83bb3-13d2-41a5-a09b-024273815d87","type":"ToolEvents"},{"attributes":{"plot":{"id":"6bf6860d-53e5-48d1-8bb2-29932edf05e4","subtype":"Figure","type":"Plot"}},"id":"89b2680b-2639-4ff4-bc74-386d8a21ff51","type":"WheelZoomTool"},{"attributes":{"data_source":{"id":"c22ad6b0-0595-40df-b018-0b423c3f2b08","type":"ColumnDataSource"},"glyph":{"id":"5c29fa06-872d-4fe3-8770-2503bb0144c0","type":"Circle"},"hover_glyph":null,"nonselection_glyph":{"id":"9883b425-2cce-458d-ab1f-c43c68050125","type":"Circle"},"selection_glyph":null},"id":"fa3eaea6-7002-4b9c-ad7e-8726314ec936","type":"GlyphRenderer"},{"attributes":{"below":[{"id":"7ba4dd9c-455b-4f2e-b34d-4dc2eacd51a8","type":"LinearAxis"}],"left":[{"id":"9fcded79-6801-4e7a-9376-cf457bf8c153","type":"LinearAxis"}],"plot_height":400,"plot_width":400,"renderers":[{"id":"7ba4dd9c-455b-4f2e-b34d-4dc2eacd51a8","type":"LinearAxis"},{"id":"a36a80e3-d0c0-486f-b707-4aed2a085e5e","type":"Grid"},{"id":"9fcded79-6801-4e7a-9376-cf457bf8c153","type":"LinearAxis"},{"id":"16213348-ffdf-47ae-9b74-939c5ed35fed","type":"Grid"},{"id":"81864e1f-faf6-42a8-824e-a8740d6b6f57","type":"BoxAnnotation"},{"id":"fa3eaea6-7002-4b9c-ad7e-8726314ec936","type":"GlyphRenderer"}],"title":{"id":"0ff52f3f-856f-43b9-bbf3-db6e18b3ef3d","type":"Title"},"tool_events":{"id":"0cf83bb3-13d2-41a5-a09b-024273815d87","type":"ToolEvents"},"toolbar":{"id":"723c8a4e-4f70-4e0d-9588-f9b8306db669","type":"Toolbar"},"x_range":{"id":"9536ea80-6343-452c-a95d-e5d41474f079","type":"DataRange1d"},"y_range":{"id":"a0f33c61-9491-4fc4-a691-d8c88538b09c","type":"DataRange1d"}},"id":"6bf6860d-53e5-48d1-8bb2-29932edf05e4","subtype":"Figure","type":"Plot"},{"attributes":{"overlay":{"id":"81864e1f-faf6-42a8-824e-a8740d6b6f57","type":"BoxAnnotation"},"plot":{"id":"6bf6860d-53e5-48d1-8bb2-29932edf05e4","subtype":"Figure","type":"Plot"}},"id":"9fced2c1-3473-4351-b821-5397c7e0edb7","type":"BoxZoomTool"}],"root_ids":["6bf6860d-53e5-48d1-8bb2-29932edf05e4"]},"title":"Bokeh Application","version":"0.12.4"}};
-            var render_items = [{"docid":"d28b3a45-026f-4d12-b30b-2f5f55dc0246","elementid":"484cfade-0589-496a-a00a-42f76ccf2176","modelid":"6bf6860d-53e5-48d1-8bb2-29932edf05e4"}];
+            var docs_json = {"7d29bdcc-b024-4882-b3a2-5559d6cc3ba8":{"roots":{"references":[{"attributes":{"fill_alpha":{"value":0.1},"fill_color":{"value":"#1f77b4"},"line_alpha":{"value":0.1},"line_color":{"value":"#1f77b4"},"x":{"field":"x"},"y":{"field":"y"}},"id":"6f227302-8da6-41d1-b662-6c87255e7d08","type":"Triangle"},{"attributes":{},"id":"93647eb7-54d9-4f34-b3fc-23b1c68192a5","type":"SaveTool"},{"attributes":{"formatter":{"id":"d68cd272-1090-4445-b9af-30148910e183","type":"BasicTickFormatter"},"plot":{"id":"71ec66e5-343e-435c-9e81-40e733cea054","subtype":"Figure","type":"Plot"},"ticker":{"id":"e19cf19c-2dd8-440d-921c-05ceb120fcf9","type":"BasicTicker"}},"id":"ffa4fd9e-cae8-4ad1-81ac-82ebce13e1ea","type":"LinearAxis"},{"attributes":{"bottom_units":"screen","fill_alpha":{"value":0.5},"fill_color":{"value":"lightgrey"},"left_units":"screen","level":"overlay","line_alpha":{"value":1.0},"line_color":{"value":"black"},"line_dash":[4,4],"line_width":{"value":2},"plot":null,"render_mode":"css","right_units":"screen","top_units":"screen"},"id":"2cc55526-d6b7-46bb-b6a4-6cbd3176cd5f","type":"BoxAnnotation"},{"attributes":{},"id":"99a5ab6e-360c-4263-b865-816254c87227","type":"PanTool"},{"attributes":{"plot":{"id":"71ec66e5-343e-435c-9e81-40e733cea054","subtype":"Figure","type":"Plot"},"ticker":{"id":"1a1b9c75-2c24-41eb-94fc-76cc1cfe2240","type":"BasicTicker"}},"id":"11811aea-46c3-4bcc-b85a-b0ebd13b7a8c","type":"Grid"},{"attributes":{"source":{"id":"33234ea0-7a40-4bfc-846c-2a1e25f329be","type":"ColumnDataSource"}},"id":"50a79d63-2bea-4d76-8bba-eadd65463b23","type":"CDSView"},{"attributes":{},"id":"d68cd272-1090-4445-b9af-30148910e183","type":"BasicTickFormatter"},{"attributes":{"below":[{"id":"93e26af0-5962-4239-ada2-684a6159fcf9","type":"LinearAxis"}],"left":[{"id":"ffa4fd9e-cae8-4ad1-81ac-82ebce13e1ea","type":"LinearAxis"}],"plot_height":400,"plot_width":400,"renderers":[{"id":"93e26af0-5962-4239-ada2-684a6159fcf9","type":"LinearAxis"},{"id":"11811aea-46c3-4bcc-b85a-b0ebd13b7a8c","type":"Grid"},{"id":"ffa4fd9e-cae8-4ad1-81ac-82ebce13e1ea","type":"LinearAxis"},{"id":"d5baed60-b3b0-4c13-8fd0-fdae2f12d7e4","type":"Grid"},{"id":"2cc55526-d6b7-46bb-b6a4-6cbd3176cd5f","type":"BoxAnnotation"},{"id":"32037ad4-7f2b-4b00-a16a-dbad29123cc0","type":"GlyphRenderer"}],"title":{"id":"b5d9f41c-9d62-41c5-8475-750cce6a4144","type":"Title"},"toolbar":{"id":"47ee7a83-21cc-487f-b3f0-ccc87d97300d","type":"Toolbar"},"x_range":{"id":"33832db6-6160-4abc-ae38-779849c6746f","type":"DataRange1d"},"x_scale":{"id":"44defb5f-59b6-4139-89a5-18e2c0618a34","type":"LinearScale"},"y_range":{"id":"52294c6a-0238-446c-9355-14e69c107b08","type":"DataRange1d"},"y_scale":{"id":"2859a636-8405-49b1-944c-10b9fc96041b","type":"LinearScale"}},"id":"71ec66e5-343e-435c-9e81-40e733cea054","subtype":"Figure","type":"Plot"},{"attributes":{"plot":null,"text":""},"id":"b5d9f41c-9d62-41c5-8475-750cce6a4144","type":"Title"},{"attributes":{},"id":"2859a636-8405-49b1-944c-10b9fc96041b","type":"LinearScale"},{"attributes":{},"id":"7f7f7149-282e-4b45-b075-9b7d2a1a5916","type":"WheelZoomTool"},{"attributes":{},"id":"44defb5f-59b6-4139-89a5-18e2c0618a34","type":"LinearScale"},{"attributes":{"data_source":{"id":"33234ea0-7a40-4bfc-846c-2a1e25f329be","type":"ColumnDataSource"},"glyph":{"id":"0d75c58f-8184-4ed5-b26b-611dec1afe50","type":"Triangle"},"hover_glyph":null,"muted_glyph":null,"nonselection_glyph":{"id":"6f227302-8da6-41d1-b662-6c87255e7d08","type":"Triangle"},"selection_glyph":null,"view":{"id":"50a79d63-2bea-4d76-8bba-eadd65463b23","type":"CDSView"}},"id":"32037ad4-7f2b-4b00-a16a-dbad29123cc0","type":"GlyphRenderer"},{"attributes":{"overlay":{"id":"2cc55526-d6b7-46bb-b6a4-6cbd3176cd5f","type":"BoxAnnotation"}},"id":"98b07ff0-627d-4070-b183-de32b31d361d","type":"BoxZoomTool"},{"attributes":{},"id":"1a1b9c75-2c24-41eb-94fc-76cc1cfe2240","type":"BasicTicker"},{"attributes":{},"id":"902aec4c-8317-4ab1-858a-c792604a9955","type":"ResetTool"},{"attributes":{},"id":"ca133ec2-c119-4d15-9772-53cb518918e4","type":"HelpTool"},{"attributes":{"callback":null},"id":"33832db6-6160-4abc-ae38-779849c6746f","type":"DataRange1d"},{"attributes":{},"id":"b12ca06c-8267-4d33-883c-eb40ef1ebd8b","type":"BasicTickFormatter"},{"attributes":{"callback":null,"column_names":["x","y"],"data":{"x":{"__ndarray__":"zczMzMxMVUAAAAAAAMBUQJqZmZmZ+VVAmpmZmZmZVUAAAAAAAABZQJqZmZmZmVdAzczMzMysVkAAAAAAACBWQAAAAAAAoFRAZmZmZmYmVkBmZmZmZuZUQJqZmZmZuVZAZmZmZmbmVkAzMzMzM3NZQJqZmZmZGVhAMzMzMzMzV0CamZmZmRlYQAAAAAAAYFhAZmZmZmZmVkAAAAAAACBZQJqZmZmZ+VdAMzMzMzOzWECamZmZmRlTQAAAAAAAAFRAMzMzMzMTU0DNzMzMzOxTQGZmZmZmplJAzczMzMwsVkCamZmZmXlSQAAAAAAA4FRAzczMzMwsVkAAAAAAACBVQGZmZmZmxlNAAAAAAAAgWUBmZmZmZuZcQGZmZmZmRlxAmpmZmZk5WUAzMzMzM7NYQDMzMzMzg2JAZmZmZmYGW0DNzMzMzIxfQDMzMzMzE1pAzczMzMzMW0AzMzMzMxNaQAAAAAAAAFNAAAAAAABgVEDNzMzMzGxSQAAAAAAA4FNAmpmZmZnZVECamZmZmZlRQM3MzMzMrFVAmpmZmZl5U0AAAAAAAIBUQGZmZmZm5lNAZmZmZmZmU0AAAAAAAABZQDMzMzMz81hAzczMzMwMWkAzMzMzM1NaQDMzMzMzk1hAMzMzMzMzWkDNzMzMzKxXQJqZmZmZmVlAzczMzMzsWEAAAAAAAGBaQDMzMzMzE1lAmpmZmZn5VEBmZmZmZqZVQJqZmZmZmVNAZmZmZmYmVUAAAAAAAOBWQDMzMzMzs1RAmpmZmZm5VEAAAAAAAABTQDMzMzMz01RAMzMzMzNzVEAzMzMzM7NTQAAAAAAAwFdAmpmZmZnZV0BmZmZmZqZYQDMzMzMz81dAAAAAAABAVkAzMzMzM3NYQJqZmZmZuVdAMzMzMzPzWEDNzMzMzGxWQGZmZmZmBlZAmpmZmZm5VkAAAAAAAIBVQAAAAAAAoFVAZmZmZmbmV0DNzMzMzExXQGZmZmZmxlRAAAAAAABgWEAzMzMzMzNWQM3MzMzMzFhAZmZmZmbmVkDNzMzMzKxVQM3MzMzMDFZAAAAAAACAV0AAAAAAAMBXQAAAAAAAAFdAzczMzMxMVkAAAAAAAOBXQGZmZmZmplhAMzMzMzPTVUAzMzMzM7NZQGZmZmZmZllAzczMzMwsVkAzMzMzMxNXQGZmZmZmplZAAAAAAABAWkAAAAAAAMBXQGZmZmZmZlZAmpmZmZkZV0BmZmZmZqZVQAAAAAAAgFZAAAAAAACAVkCamZmZmRlXQAAAAAAA4FVAzczMzMzMWEBmZmZmZoZYQDMzMzMz01RAZmZmZmaGVUBmZmZmZgZVQJqZmZmZeVZAZmZmZmYGV0AAAAAAAIBTQAAAAAAAYFdAAAAAAADAVUBmZmZmZoZWQDMzMzMzk1ZAMzMzMzPzWECamZmZmVlWQM3MzMzMzFVAZmZmZmZGWUBmZmZmZoZVQGZmZmZmplhAAAAAAAAgVkBmZmZmZqZaQGZmZmZmRldAAAAAAABAV0AAAAAAAMBWQGZmZmZmRlNAMzMzMzNTVUCamZmZmXlUQGZmZmZmxlhAAAAAAAAgWUAAAAAAACBTQDMzMzMzs1pAZmZmZmZmU0A=","dtype":"float64","shape":[151]},"y":{"__ndarray__":"AAAAAABIY0AAAAAAAKhlQAAAAAAAQGNAAAAAAAAYZ0AAAAAAAAhnQAAAAAAASGpAAAAAAACgZkAAAAAAAABmQAAAAAAA4GdAAAAAAADIaEAAAAAAAEhnQAAAAAAAAGtAAAAAAACQZkAAAAAAAKhpQAAAAAAAeGdAAAAAAABYZEAAAAAAAHhoQAAAAAAAKGpAAAAAAAD4ZkAAAAAAAHhqQAAAAAAAYGZAAAAAAAAQaUAAAAAAAIhhQAAAAAAAmGJAAAAAAADoYkAAAAAAAOhjQAAAAAAAcGBAAAAAAACAYkAAAAAAAKhgQAAAAAAAGGRAAAAAAADAZkAAAAAAAAhkQAAAAAAAAGVAAAAAAABQa0AAAAAAAOhuQAAAAAAA+GdAAAAAAABIaUAAAAAAAJhoQGZmZmZmsnZAAAAAAABgaUAAAAAAAGxwQAAAAAAAoGlAAAAAAAAga0AAAAAAAIBqQAAAAAAAUF9AAAAAAACIZEAAAAAAALBgQAAAAAAAkGJAAAAAAAD4YEAAAAAAAOBfQAAAAAAAyGNAAAAAAABoYUAAAAAAAChhQAAAAAAAGGNAAAAAAAAIYUAAAAAAAMBoQAAAAAAAsGZAAAAAAAAoaUAAAAAAAFBpQAAAAAAAeGZAAAAAAAAAa0AAAAAAAFhmQAAAAAAAKGhAAAAAAABAZkAAAAAAALBpQAAAAAAA8GZAAAAAAADwYkAAAAAAAFhjQAAAAAAAaGNAAAAAAACYY0AAAAAAAPBkQAAAAAAAWGJAAAAAAAAYZEAAAAAAAEBfQAAAAAAA4GFAAAAAAACIYkAAAAAAAFBkQAAAAAAAOGZAAAAAAAAoZEAAAAAAAGhlQAAAAAAAeGRAAAAAAADIYkAAAAAAAMhnQAAAAAAAWGVAAAAAAAAAZUAAAAAAAOBkQAAAAAAAuGNAAAAAAAAAZEAAAAAAABhmQAAAAAAAAGZAAAAAAAAgZkAAAAAAAHhmQAAAAAAAqGRAAAAAAAAQaEAAAAAAAAhnQAAAAAAAEGxAAAAAAACYZ0AAAAAAAFBkQAAAAAAAkGNAAAAAAACgaEAAAAAAANBoQAAAAAAAuGVAAAAAAACYZUAAAAAAAJhoQAAAAAAAIGZAAAAAAACwZEAAAAAAAAhpQAAAAAAAaGlAAAAAAABAaEAAAAAAABBlQAAAAAAAWGVAAAAAAADoZkAAAAAAAEhmQAAAAAAAYGRAAAAAAADoZUAAAAAAAMBjQAAAAAAAKGZAAAAAAABgZkAAAAAAAOBnQAAAAAAAcGdAAAAAAADQaUAAAAAAAChnQAAAAAAACGRAAAAAAADwYkAAAAAAACBkQAAAAAAA4GRAAAAAAAAwZkAAAAAAAAhjQAAAAAAACGhAAAAAAACoZEAAAAAAAHhlQAAAAAAAaGVAAAAAAACgaEAAAAAAAKBjQAAAAAAACGVAAAAAAABAZ0AAAAAAANhkQAAAAAAAeGdAAAAAAAAIZUAAAAAAAJhqQAAAAAAAGGZAAAAAAACoZUAAAAAAAOBkQAAAAAAA+GNAzczMzMyEZ0AAAAAAAIBjQAAAAAAAEGpAAAAAAADQaUAAAAAAAPhhQAAAAAAA4GtAAAAAAAAIY0A=","dtype":"float64","shape":[151]}}},"id":"33234ea0-7a40-4bfc-846c-2a1e25f329be","type":"ColumnDataSource"},{"attributes":{"fill_color":{"value":"green"},"line_color":{"value":"green"},"x":{"field":"x"},"y":{"field":"y"}},"id":"0d75c58f-8184-4ed5-b26b-611dec1afe50","type":"Triangle"},{"attributes":{},"id":"e19cf19c-2dd8-440d-921c-05ceb120fcf9","type":"BasicTicker"},{"attributes":{"callback":null},"id":"52294c6a-0238-446c-9355-14e69c107b08","type":"DataRange1d"},{"attributes":{"active_drag":"auto","active_inspect":"auto","active_scroll":"auto","active_tap":"auto","tools":[{"id":"99a5ab6e-360c-4263-b865-816254c87227","type":"PanTool"},{"id":"7f7f7149-282e-4b45-b075-9b7d2a1a5916","type":"WheelZoomTool"},{"id":"98b07ff0-627d-4070-b183-de32b31d361d","type":"BoxZoomTool"},{"id":"93647eb7-54d9-4f34-b3fc-23b1c68192a5","type":"SaveTool"},{"id":"902aec4c-8317-4ab1-858a-c792604a9955","type":"ResetTool"},{"id":"ca133ec2-c119-4d15-9772-53cb518918e4","type":"HelpTool"}]},"id":"47ee7a83-21cc-487f-b3f0-ccc87d97300d","type":"Toolbar"},{"attributes":{"dimension":1,"plot":{"id":"71ec66e5-343e-435c-9e81-40e733cea054","subtype":"Figure","type":"Plot"},"ticker":{"id":"e19cf19c-2dd8-440d-921c-05ceb120fcf9","type":"BasicTicker"}},"id":"d5baed60-b3b0-4c13-8fd0-fdae2f12d7e4","type":"Grid"},{"attributes":{"formatter":{"id":"b12ca06c-8267-4d33-883c-eb40ef1ebd8b","type":"BasicTickFormatter"},"plot":{"id":"71ec66e5-343e-435c-9e81-40e733cea054","subtype":"Figure","type":"Plot"},"ticker":{"id":"1a1b9c75-2c24-41eb-94fc-76cc1cfe2240","type":"BasicTicker"}},"id":"93e26af0-5962-4239-ada2-684a6159fcf9","type":"LinearAxis"}],"root_ids":["71ec66e5-343e-435c-9e81-40e733cea054"]},"title":"Bokeh Application","version":"0.12.7"}};
+            var render_items = [{"docid":"7d29bdcc-b024-4882-b3a2-5559d6cc3ba8","elementid":"685d72e4-697d-4d03-8cf2-ed8bc572d31e","modelid":"71ec66e5-343e-435c-9e81-40e733cea054"}];
             
             Bokeh.embed.embed_items(docs_json, render_items);
           };
@@ -13147,24 +13257,24 @@ var element = $('#710a370b-d45f-428d-b483-7486830de00f');
   
     function run_inline_js() {
       
-      if ((window.Bokeh !== undefined) || (force === true)) {
+      if ((root.Bokeh !== undefined) || (force === true)) {
         for (var i = 0; i < inline_js.length; i++) {
-          inline_js[i](window.Bokeh);
+          inline_js[i].call(root, root.Bokeh);
         }if (force === true) {
           display_loaded();
-        }} else if (Date.now() < window._bokeh_timeout) {
+        }} else if (Date.now() < root._bokeh_timeout) {
         setTimeout(run_inline_js, 100);
-      } else if (!window._bokeh_failed_load) {
+      } else if (!root._bokeh_failed_load) {
         console.log("Bokeh: BokehJS failed to load within specified timeout.");
-        window._bokeh_failed_load = true;
+        root._bokeh_failed_load = true;
       } else if (force !== true) {
-        var cell = $(document.getElementById("484cfade-0589-496a-a00a-42f76ccf2176")).parents('.cell').data().cell;
+        var cell = $(document.getElementById("685d72e4-697d-4d03-8cf2-ed8bc572d31e")).parents('.cell').data().cell;
         cell.output_area.append_execute_result(NB_LOAD_WARNING)
       }
   
     }
   
-    if (window._bokeh_is_loading === 0) {
+    if (root._bokeh_is_loading === 0) {
       console.log("Bokeh: BokehJS loaded, going straight to plotting");
       run_inline_js();
     } else {
@@ -13173,12 +13283,25 @@ var element = $('#710a370b-d45f-428d-b483-7486830de00f');
         run_inline_js();
       });
     }
-  }(this));
+  }(window));
 </script>
 </div>
 
 </div>
 
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+</div>
 </div>
 </div>
 
