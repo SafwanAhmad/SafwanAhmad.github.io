@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.0">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2018-01-21T23:24:45+05:30</updated><id>http://localhost:4000/</id><title type="html">Hundred Shades of Machine Learning</title><subtitle>Personal Blog of Safwan Ahmad</subtitle><author><name>Safwan Ahmad Siddiqi</name></author><entry><title type="html">Linear regression a tale of a transform</title><link href="http://localhost:4000/2018/01/21/Linear-Regression-A-Tale-of-a-Transform.html" rel="alternate" type="text/html" title="Linear regression a tale of a transform" /><published>2018-01-21T00:00:00+05:30</published><updated>2018-01-21T00:00:00+05:30</updated><id>http://localhost:4000/2018/01/21/Linear%20Regression%20A%20Tale%20of%20a%20Transform</id><content type="html" xml:base="http://localhost:4000/2018/01/21/Linear-Regression-A-Tale-of-a-Transform.html">&lt;!DOCTYPE html&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.0">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2018-01-21T23:40:25+05:30</updated><id>http://localhost:4000/</id><title type="html">Hundred Shades of Machine Learning</title><subtitle>Personal Blog of Safwan Ahmad</subtitle><author><name>Safwan Ahmad Siddiqi</name></author><entry><title type="html">Linear regression a tale of a transform</title><link href="http://localhost:4000/2018/01/21/Linear-Regression-A-Tale-of-a-Transform.html" rel="alternate" type="text/html" title="Linear regression a tale of a transform" /><published>2018-01-21T00:00:00+05:30</published><updated>2018-01-21T00:00:00+05:30</updated><id>http://localhost:4000/2018/01/21/Linear%20Regression%20A%20Tale%20of%20a%20Transform</id><content type="html" xml:base="http://localhost:4000/2018/01/21/Linear-Regression-A-Tale-of-a-Transform.html">&lt;!DOCTYPE html&gt;
 &lt;html&gt;
 &lt;head&gt;&lt;meta charset=&quot;utf-8&quot; /&gt;
 &lt;title&gt;Linear Regression A Tale of a Transform&lt;/title&gt;&lt;script src=&quot;https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js&quot;&gt;&lt;/script&gt;
@@ -13167,7 +13167,7 @@ var element = $('#11b7dd16-903b-40bc-9e2d-bfa50d04b536');
         var d = document, s = d.createElement('script');
 
         // IMPORTANT: Replace EXAMPLE with your forum shortname!
-        s.src = 'https://safwan_ahmad.disqus.com/embed.js';
+        s.src = 'https://safwan-ahmad.disqus.com/embed.js';
 
         s.setAttribute('data-timestamp', +new Date());
         (d.head || d.body).appendChild(s);
